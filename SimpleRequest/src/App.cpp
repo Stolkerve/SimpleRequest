@@ -230,8 +230,9 @@ namespace simple {
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.f)); ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.8f, 0.5f, 1.f)); ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 0.8f, 0.5f, 1.f)); ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 0.8f, 0.5f, 1.f));
 		ImGui::Button( m_StatusCode ? ("Code: " + std::to_string(m_StatusCode)).c_str() : "" );
 		ImGui::PopStyleColor(4); ImGui::SameLine();
-
-		ImGui::InputInt("Time out(ms)", &m_TimeOut);
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() * 0.5f);
+		ImGui::InputInt("TimeOut(ms)", &m_TimeOut);
+		ImGui::PopItemWidth();
 
 		ImGui::BeginChild("CenterChild", ImVec2(ImGui::GetWindowContentRegionWidth(), 0), false);
 		if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
@@ -274,7 +275,6 @@ namespace simple {
 					auto finalHeader = key + ": " + value;
 					m_RequestHeaders.push_back(finalHeader);
 					key.clear(); value.clear();
-					Logger::Info(m_RequestHeaders.back());
 				}
 				ImGui::PopID();
 				ImGui::EndTabItem();

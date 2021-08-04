@@ -12,9 +12,9 @@ namespace simple {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
-
+        //io.Fonts->AddFontDefault()
         //io.Fonts->AddFontFromMemoryTTF
-        io.Fonts->AddFontFromFileTTF("./fonts/OpenSans-Bold.ttf", 19);
+        //io.Fonts->AddFontFromFileTTF("./fonts/OpenSans-Bold.ttf", 19);
 
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
         //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
