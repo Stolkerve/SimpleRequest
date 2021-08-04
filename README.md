@@ -1,5 +1,5 @@
 # SimpleRequest
-An ultra light and simple client http for CRUD testing, like postman.
+An ultra light, portable and simple client http for CRUD testing, like postman.
 
 ## Compilation
 First, you need download premake5 and drop it in the project foldel or set a variable path to premake5 and type in the console.
