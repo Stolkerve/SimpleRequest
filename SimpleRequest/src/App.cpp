@@ -162,7 +162,7 @@ namespace simple {
 
 		ImGui::PopStyleVar(2);
 
-		ImGui::ShowDemoWindow();
+		//ImGui::ShowDemoWindow();
 
 		ImGui::Render();
 	}
