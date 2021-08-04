@@ -227,9 +227,12 @@ namespace simple {
 		}
 		ImGui::PopStyleColor(6);
 
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.f)); ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.8f, 0.5f, 1.f)); ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 0.8f, 0.5f, 1.f)); ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 0.8f, 0.5f, 1.f));
-		ImGui::Button( m_StatusCode ? ("Code: " + std::to_string(m_StatusCode)).c_str() : "" );
-		ImGui::PopStyleColor(4); ImGui::SameLine();
+		if (m_StatusCode)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.f)); ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.8f, 0.5f, 1.f)); ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 0.8f, 0.5f, 1.f)); ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 0.8f, 0.5f, 1.f));
+			ImGui::Button(("Code: " + std::to_string(m_StatusCode)).c_str());
+			ImGui::PopStyleColor(4); ImGui::SameLine();
+		}
 		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() * 0.5f);
 		ImGui::InputInt("TimeOut(ms)", &m_TimeOut);
 		ImGui::PopItemWidth();
@@ -253,7 +256,7 @@ namespace simple {
 					InputText("##header key", &key, ImGuiInputTextFlags_ReadOnly); ImGui::SameLine();
 					InputText("##header value", &value, ImGuiInputTextFlags_ReadOnly); ImGui::SameLine();
 					ImGui::PopItemWidth();
-					if (ImGui::Button("  - "))
+					if (ImGui::Button(" - "))
 					{
 						m_RequestHeaders.erase(m_RequestHeaders.begin() + i);
 					}
