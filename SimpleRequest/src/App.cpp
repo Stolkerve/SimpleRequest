@@ -167,6 +167,23 @@ namespace simple {
 		ImGui::Render();
 	}
 
+	void App::CreateRequest(const std::string& method, const std::string& body, const std::vector<std::string>& headers)
+	{
+		try
+		{
+			http::Request request{ std::string(m_Url) };
+			const auto response = request.send(method, body, headers, std::chrono::milliseconds{ m_TimeOut });
+			m_StatusCode = response.status;
+			for (auto& h : response.headers)
+				m_ResponseHeader += std::move((h + '\n'));
+			m_ResponseBody = std::move(std::string{ response.body.begin(), response.body.end() });
+		}
+		catch (const std::exception& e)
+		{
+			Logger::Error("Request failed, error: ", e.what());
+		}
+	}
+
 	void App::RenderRequestPanel()
 	{
 		const float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
@@ -195,28 +212,26 @@ namespace simple {
 
 			m_ResponseHeader.clear(); m_ResponseBody.clear();
 
-			try
-			{
-				http::Request request{ std::string(m_Url) };
-				const auto response = request.send(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders, std::chrono::milliseconds{ m_TimeOut });
-				m_StatusCode = response.status;
-				for (auto& h : response.headers)
-					m_ResponseHeader += std::move((h + '\n'));
-				m_ResponseBody = std::move(std::string{ response.body.begin(), response.body.end() });
-			}
-			catch (const std::exception& e)
-			{
-				Logger::Error("Request failed, error: ", e.what());
-			}
+			if (m_Methods[m_SelectedMethod] == "GET")
+				CreateRequest(m_Methods[m_SelectedMethod], "", m_RequestHeaders);
+			else if (m_Methods[m_SelectedMethod] == "POST")
+				CreateRequest(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders);
+			else if (m_Methods[m_SelectedMethod] == "PUT")
+				CreateRequest(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders);
+			else if (m_Methods[m_SelectedMethod] == "PATCH")
+				CreateRequest(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders);
+			else if (m_Methods[m_SelectedMethod] == "DELETE")
+				CreateRequest(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders);
 
 			m_BlockInputAndSend = false;
 		}
-
 		ImGui::PopStyleColor(6);
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.f));
-		ImGui::Text( m_StatusCode ? ("Status code: " + std::to_string(m_StatusCode)).c_str() : "" );
-		ImGui::PopStyleColor(); ImGui::SameLine();
-		ImGui::InputInt("Time out ms", &m_TimeOut);
+
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.f)); ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.8f, 0.5f, 1.f)); ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 0.8f, 0.5f, 1.f)); ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 0.8f, 0.5f, 1.f));
+		ImGui::Button( m_StatusCode ? ("Code: " + std::to_string(m_StatusCode)).c_str() : "" );
+		ImGui::PopStyleColor(4); ImGui::SameLine();
+
+		ImGui::InputInt("Time out(ms)", &m_TimeOut);
 
 		ImGui::BeginChild("CenterChild", ImVec2(ImGui::GetWindowContentRegionWidth(), 0), false);
 		if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
@@ -234,12 +249,12 @@ namespace simple {
 					auto value = h.substr(twoDotsPos + 2);
 					ImGui::PushID(i);
 					ImGui::PushMultiItemsWidths(1, (ImGui::GetContentRegionAvailWidth() * 0.5f) - plusCharSize.x);
-					InputText("##header key", &key, ImGuiInputTextFlags_EnterReturnsTrue); ImGui::SameLine();
-					InputText("##header value", &value, ImGuiInputTextFlags_EnterReturnsTrue); ImGui::SameLine();
+					InputText("##header key", &key, ImGuiInputTextFlags_ReadOnly); ImGui::SameLine();
+					InputText("##header value", &value, ImGuiInputTextFlags_ReadOnly); ImGui::SameLine();
 					ImGui::PopItemWidth();
 					if (ImGui::Button("  - "))
 					{
-						Logger::Info(i);
+						m_RequestHeaders.erase(m_RequestHeaders.begin() + i);
 					}
 					ImGui::PopID();
 
