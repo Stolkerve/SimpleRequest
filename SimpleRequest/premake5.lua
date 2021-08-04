@@ -65,7 +65,8 @@ project "SimpleRequest"
 		{
 			"glfw",
 			"glad",
-			"opengl32.lib"
+			"opengl32.lib",
+			"ws2_32.lib"
 		}
 
 	filter "configurations:Debug"

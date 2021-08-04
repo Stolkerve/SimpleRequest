@@ -1,6 +1,5 @@
 #include "ImGuiApp.h"
 
-#include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include <imgui/imgui_internal.h>
@@ -13,6 +12,10 @@ namespace simple {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+        //io.Fonts->AddFontFromMemoryTTF
+        io.Fonts->AddFontFromFileTTF("./fonts/OpenSans-Bold.ttf", 19);
+
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
         //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
