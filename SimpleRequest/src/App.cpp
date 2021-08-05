@@ -208,7 +208,13 @@ namespace simple {
 
 		ImGui::PushItemWidth(comboSize.x * 1.5f);
 		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.0f, 0.0f, 0.2f, 1.f));
-		ImGui::Combo("##methods", &m_SelectedMethod, m_Methods.data(), m_Methods.size());
+		if (ImGui::Combo("##methods selector", &m_SelectedMethod, m_Methods.data(), m_Methods.size()))
+		{
+			if (m_SelectedMethod != 0 && m_SelectedMethod != 4)
+				m_SelectedContentType = m_SelectedContentType != 0 ? m_SelectedContentType : 0;
+			else
+				m_SelectedContentType = 0;
+		}
 		ImGui::PopItemWidth(); ImGui::SameLine(0, 0);
 
 		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - textInputSize.x);
@@ -223,17 +229,14 @@ namespace simple {
 			m_BlockInputAndSend = true;
 
 			m_ResponseHeader.clear(); m_ResponseBody.clear();
+			if (m_SelectedContentType == 1) m_RequestHeaders.push_back("Content-Type: application/json");
+			else if (m_SelectedContentType == 2) m_RequestHeaders.push_back("Content-Type: text/plain");
 
-			if (m_Methods[m_SelectedMethod] == "GET")
-				CreateRequest(m_Methods[m_SelectedMethod], "", m_RequestHeaders);
-			else if (m_Methods[m_SelectedMethod] == "POST")
-				CreateRequest(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders);
-			else if (m_Methods[m_SelectedMethod] == "PUT")
-				CreateRequest(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders);
-			else if (m_Methods[m_SelectedMethod] == "PATCH")
-				CreateRequest(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders);
-			else if (m_Methods[m_SelectedMethod] == "DELETE")
-				CreateRequest(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders);
+			if (m_Methods[m_SelectedMethod] == "GET") CreateRequest(m_Methods[m_SelectedMethod], "", m_RequestHeaders);
+			else if (m_Methods[m_SelectedMethod] == "POST") CreateRequest(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders);
+			else if (m_Methods[m_SelectedMethod] == "PUT") CreateRequest(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders);
+			else if (m_Methods[m_SelectedMethod] == "PATCH") CreateRequest(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders);
+			else if (m_Methods[m_SelectedMethod] == "DELETE") CreateRequest(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders);
 
 			m_BlockInputAndSend = false;
 		}
@@ -242,10 +245,19 @@ namespace simple {
 		if (m_StatusCode)
 		{
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.f)); ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.8f, 0.5f, 1.f)); ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 0.8f, 0.5f, 1.f)); ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 0.8f, 0.5f, 1.f));
-			ImGui::Button(("Code: " + std::to_string(m_StatusCode)).c_str());
+			ImGui::Button(("Code " + std::to_string(m_StatusCode)).c_str());
 			ImGui::PopStyleColor(4); ImGui::SameLine();
 		}
-		ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() * 0.5f);
+
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.0f, 0.0f, 0.2f, 1.f)); ImGui::PushItemWidth(CalButtomSize("text").x * 1.5); // the item with the larger size 
+		if (ImGui::Combo("ContentType", &m_SelectedContentType, m_ContentType.data(), m_ContentType.size()))
+		{
+			if (m_SelectedMethod == 0 || m_SelectedMethod == 4) // Get, DELETE
+				m_SelectedContentType = 0; // none
+		}
+		ImGui::PopStyleColor(); ImGui::PopItemWidth(); ImGui::SameLine();
+
+		ImGui::PushItemWidth(180.f);
 		ImGui::InputInt("TimeOut(ms)", &m_TimeOut);
 		ImGui::PopItemWidth();
 
@@ -260,21 +272,25 @@ namespace simple {
 				ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.0f, 0.2f, 0.2f, 1.f));
 				for (auto& h : m_RequestHeaders)
 				{
-					auto twoDotsPos = h.find(":");
-					auto key = std::string(h.begin(), h.begin() + twoDotsPos);
-					auto value = h.substr(twoDotsPos + 2);
-					ImGui::PushID(i);
-					ImGui::PushMultiItemsWidths(1, (ImGui::GetContentRegionAvailWidth() * 0.5f) - plusCharSize.x);
-					InputText("##header key", &key, ImGuiInputTextFlags_ReadOnly); ImGui::SameLine();
-					InputText("##header value", &value, ImGuiInputTextFlags_ReadOnly); ImGui::SameLine();
-					ImGui::PopItemWidth();
-					if (ImGui::Button(" - "))
+					if (h.length())
 					{
-						m_RequestHeaders.erase(m_RequestHeaders.begin() + i);
-					}
-					ImGui::PopID();
+						auto twoDotsPos = h.find(":");
+						auto key = std::string(h.begin(), h.begin() + twoDotsPos);
+						auto value = h.substr(twoDotsPos + 2);
+						ImGui::PushID(i);
+						ImGui::PushMultiItemsWidths(1, (ImGui::GetContentRegionAvailWidth() * 0.5f) - plusCharSize.x);
+						InputText("##header key", &key, ImGuiInputTextFlags_ReadOnly); ImGui::SameLine();
+						InputText("##header value", &value, ImGuiInputTextFlags_ReadOnly); ImGui::SameLine();
+						ImGui::PopItemWidth();
+						if (ImGui::Button(" - "))
+						{
+							Logger::Info(i);
+							m_RequestHeaders.erase(m_RequestHeaders.begin() + i);
+						}
+						ImGui::PopID();
 
-					i++;
+						i++;
+					}
 				}
 				ImGui::PopStyleColor();
 
@@ -282,10 +298,10 @@ namespace simple {
 				static std::string value("");
 				ImGui::PushID("littleheaders");
 				ImGui::PushMultiItemsWidths(1, (ImGui::GetContentRegionAvailWidth() * 0.5f) - plusCharSize.x);
-				InputText("##input header key", &key, ImGuiInputTextFlags_EnterReturnsTrue); ImGui::SameLine();
-				InputText("##input header value", &value, ImGuiInputTextFlags_EnterReturnsTrue); ImGui::SameLine();
+				auto inputKey = InputText("##input header key", &key, ImGuiInputTextFlags_EnterReturnsTrue); ImGui::SameLine();
+				auto inputValue = InputText("##input header value", &value, ImGuiInputTextFlags_EnterReturnsTrue); ImGui::SameLine();
 				ImGui::PopItemWidth();
-				if (ImGui::Button(" + ") && key.length() && value.length())
+				if (( ImGui::Button(" + ") || inputKey || inputValue ) && key.length() && value.length())
 				{
 					auto finalHeader = key + ": " + value;
 					m_RequestHeaders.push_back(finalHeader);

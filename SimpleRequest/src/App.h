@@ -28,6 +28,7 @@ namespace simple {
 		int m_TimeOut = 10000;
 		int m_StatusCode = 0;
 		int m_SelectedMethod = 0;
+		int m_SelectedContentType = 0;
 		std::unique_ptr<Window> m_Window;
 		std::vector<std::string> m_RequestHeaders;
 		std::string m_RequestBody;
@@ -37,6 +38,7 @@ namespace simple {
 		bool m_BlockInputAndSend = false;
 		ImGuiApp m_ImGuiApp;
 		std::array<const char*, 5> m_Methods = { "GET", "POST", "PUT", "PATCH", "DELETE" };
+		std::array<const char*, 3> m_ContentType = { "none", "json", "text" /*, "x-www-form-urlencoded", application/octet-stream*/ };
 		nlohmann::json m_Json;
 	};
 };
