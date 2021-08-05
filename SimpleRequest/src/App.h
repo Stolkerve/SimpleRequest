@@ -22,7 +22,7 @@ namespace simple {
 		void RenderImGui();
 		void RenderRespondePanel();
 		void RenderRequestPanel();
-		void CreateRequest(const std::string& method, const std::string& body, const std::vector<std::string>& headers);
+		void CreateRequest(const std::string& method, const std::string& body, std::vector<std::string> headers); // copy the vector
 
 	private:
 		int m_TimeOut = 10000;

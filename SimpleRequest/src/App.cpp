@@ -167,10 +167,13 @@ namespace simple {
 		ImGui::Render();
 	}
 
-	void App::CreateRequest(const std::string& method, const std::string& body, const std::vector<std::string>& headers)
+	void App::CreateRequest(const std::string& method, const std::string& body, std::vector<std::string> headers)
 	{
 		try
 		{
+			if (m_SelectedContentType == 1) headers.push_back("Content-Type: application/json");
+			else if (m_SelectedContentType == 2) headers.push_back("Content-Type: text/plain");
+
 			http::Request request{ std::string(m_Url) };
 			const auto response = request.send(method, body, headers, std::chrono::milliseconds{ m_TimeOut });
 			m_StatusCode = response.status;
@@ -229,8 +232,6 @@ namespace simple {
 			m_BlockInputAndSend = true;
 
 			m_ResponseHeader.clear(); m_ResponseBody.clear();
-			if (m_SelectedContentType == 1) m_RequestHeaders.push_back("Content-Type: application/json");
-			else if (m_SelectedContentType == 2) m_RequestHeaders.push_back("Content-Type: text/plain");
 
 			if (m_Methods[m_SelectedMethod] == "GET") CreateRequest(m_Methods[m_SelectedMethod], "", m_RequestHeaders);
 			else if (m_Methods[m_SelectedMethod] == "POST") CreateRequest(m_Methods[m_SelectedMethod], m_RequestBody, m_RequestHeaders);
@@ -284,7 +285,6 @@ namespace simple {
 						ImGui::PopItemWidth();
 						if (ImGui::Button(" - "))
 						{
-							Logger::Info(i);
 							m_RequestHeaders.erase(m_RequestHeaders.begin() + i);
 						}
 						ImGui::PopID();
