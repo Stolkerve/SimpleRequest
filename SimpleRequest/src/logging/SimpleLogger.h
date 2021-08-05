@@ -22,7 +22,7 @@ constexpr auto BRIGHT_GREEN = "\x1B[92m";
 constexpr auto BRIGHT_YELLOW = "\x1B[93m";
 constexpr auto YELLOW = "\x1B[33m";
 constexpr auto BRIGHT_RED_BACKGROUND = "\033[101;1m";
-constexpr auto NORMAL_BACKGROUND = "\033[101;1m";
+constexpr auto NORMAL_BACKGROUND = "\033[0m\n";
 constexpr auto NORMAL_COLOR = "\x1B[0m";
 
 #include <iostream>

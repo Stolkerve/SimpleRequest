@@ -174,9 +174,21 @@ namespace simple {
 			http::Request request{ std::string(m_Url) };
 			const auto response = request.send(method, body, headers, std::chrono::milliseconds{ m_TimeOut });
 			m_StatusCode = response.status;
+			size_t isJson = std::string::npos;
 			for (auto& h : response.headers)
+			{
+				isJson = isJson == std::string::npos ? h.find("json") : isJson;
 				m_ResponseHeader += std::move((h + '\n'));
-			m_ResponseBody = std::move(std::string{ response.body.begin(), response.body.end() });
+			}
+			if (isJson != std::string::npos)
+			{
+				m_Json = m_Json.parse(std::string{ response.body.begin(), response.body.end() });
+				m_ResponseBody = std::move(m_Json.dump(2));
+			}
+			else
+			{
+				m_ResponseBody = std::string{ response.body.begin(), response.body.end() };
+			}
 		}
 		catch (const std::exception& e)
 		{

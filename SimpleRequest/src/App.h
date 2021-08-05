@@ -6,6 +6,8 @@
 #include <string_view>
 #include <array>
 
+#include <nlohmann/json.hpp>
+
 #include "Window.h"
 #include "ImGuiApp.h"
 
@@ -35,5 +37,6 @@ namespace simple {
 		bool m_BlockInputAndSend = false;
 		ImGuiApp m_ImGuiApp;
 		std::array<const char*, 5> m_Methods = { "GET", "POST", "PUT", "PATCH", "DELETE" };
+		nlohmann::json m_Json;
 	};
 };
