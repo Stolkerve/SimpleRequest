@@ -1,5 +1,6 @@
 #ifdef _WIN32
 #include <windows.h>
+#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
 #endif // _WIN_32
 
 #include "App.h"
