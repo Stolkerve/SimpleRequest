@@ -1,6 +1,8 @@
 #include "Window.h"
 #include "logging/SimpleLogger.h"
 #include <glad/glad.h>
+
+
 namespace simple {
 	Window::Window(uint32_t width, uint32_t height, std::string_view title)
 		: m_Width(width), m_Height(height)
@@ -32,8 +34,6 @@ namespace simple {
 			glfwDestroyWindow(m_Window);
 			glfwTerminate();
 		}
-
-		Logger::Info("Ventana creada!", m_Width, " x ", m_Height);
 
 		std::string versionString = std::string((const char*)glGetString(GL_VERSION));
 		Logger::Info(versionString);

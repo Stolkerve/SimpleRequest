@@ -16,7 +16,6 @@ IncludeDir = {}
 IncludeDir["glfw"] = "%{wks.location}/SimpleRequest/dependencies/glfw/include"
 IncludeDir["glad"] = "%{wks.location}/SimpleRequest/dependencies/glad/include"
 IncludeDir["imgui"] = "%{wks.location}/SimpleRequest/dependencies/imgui"
-IncludeDir["ImGuiColorTextEdit"] = "%{wks.location}/SimpleRequest/dependencies/ImGuiColorTextEdit"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}"
 

@@ -78,7 +78,7 @@ namespace simple {
 	//}
 
 	App::App()
-		: m_Window(std::make_unique<Window>(640, 480, "Hola mundo")),
+		: m_Window(std::make_unique<Window>(640, 480, "Simple Icon")),
 		m_ImGuiApp(m_Window->GetWindow()),
 		m_RequestBody("")
 	{

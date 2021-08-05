@@ -18,6 +18,13 @@ Bright Cyan     96  106
 Bright White    97  107
 */
 
+constexpr auto BRIGHT_GREEN = "\x1B[92m";
+constexpr auto BRIGHT_YELLOW = "\x1B[93m";
+constexpr auto YELLOW = "\x1B[33m";
+constexpr auto BRIGHT_RED_BACKGROUND = "\033[101;1m";
+constexpr auto NORMAL_BACKGROUND = "\033[101;1m";
+constexpr auto NORMAL_COLOR = "\x1B[0m";
+
 #include <iostream>
 #include <iomanip>
 #include <chrono>
@@ -45,7 +52,7 @@ namespace simple {
                 return;
             }
 
-            std::cout << "\x1B[92m" << getDate() << stream.str() << "\033[0m\n";
+            std::cout << BRIGHT_GREEN << getDate() << stream.str() << NORMAL_COLOR << '\n';
         }
 
         template<typename ... Ts>
@@ -58,7 +65,7 @@ namespace simple {
                 return;
             }
 
-            std::cout << "\x1B[93m" << getDate() << stream.str() << "\033[0m\n";
+            std::cout << BRIGHT_YELLOW << getDate() << stream.str() << NORMAL_COLOR << '\n';
         }
 
         template<typename ... Ts>
@@ -69,7 +76,7 @@ namespace simple {
                 std::cout << '\n';
                 return;
             }
-            std::cout << "\033[1;101;97m" << getDate() << stream.str() << "\033[0m\n";
+            std::cout << BRIGHT_RED_BACKGROUND << YELLOW << getDate() << stream.str() << NORMAL_COLOR << NORMAL_BACKGROUND;
 
         }
     };

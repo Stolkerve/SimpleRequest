@@ -12,8 +12,6 @@ project "SimpleRequest"
 		"src/**.h",
 		"src/**.hh",
 		"src/**.cpp",
-		"dependencies/ImGuiColorTextEdit/**.cpp",
-		"dependencies/ImGuiColorTextEdit/**.h",
 		"dependencies/imgui/**.h",
 		"dependencies/imgui/**.cpp",
 	}
@@ -31,7 +29,6 @@ project "SimpleRequest"
 		"%{IncludeDir.glfw}",
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.imgui}",
-		"%{IncludeDir.ImGuiColorTextEdit}",
 	}
 
 	filter "configurations:Debug"
