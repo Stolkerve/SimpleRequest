@@ -1,7 +1,7 @@
 # SimpleRequest
 An ultra light, portable and simple client http for CRUD testing, like postman.
 
-![alt text](https://github.com/Stolkerve/SimpleRequest/blob/main/res/capture.png?raw=true)
+![alt text](https://github.com/Stolkerve/SimpleRequest/blob/master/res/capture.png?raw=true)
 
 ## Compilation
 First, you need download premake5 and drop it in the project foldel or set a variable path to premake5 and type in the console.
