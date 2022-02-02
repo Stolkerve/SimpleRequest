@@ -20,9 +20,10 @@ namespace simple {
 
 	private:
 		void RenderImGui();
+		// void OnResponde();
 		void RenderRespondePanel();
 		void RenderRequestPanel();
-		void CreateRequest(const std::string& method, const std::string& body, std::vector<std::string> headers); // copy the vector
+		// void CreateRequest(const std::string& method, const std::string& body, std::vector<std::string> headers); // copy the vector
 
 	private:
 		int m_TimeOut = 10000;

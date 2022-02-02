@@ -1,5 +1,6 @@
 #pragma once
 #include <string_view>
+#include <string>
 #include <GLFW/glfw3.h>
 
 namespace simple {
